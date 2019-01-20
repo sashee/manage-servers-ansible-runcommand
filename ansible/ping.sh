@@ -1,0 +1,2 @@
+# https://docs.ansible.com/ansible/latest/plugins/inventory/host_list.html#host-list-inventory
+ansible -i "$(aws ec2 describe-instances --filter "Name=tag:Group,Values=ansible-test" --query "Reservations[].Instances[].NetworkInterfaces[].PrivateIpAddresses[].Association.PublicIp" --no-paginate | jq -r '. | map("ec2-user@"+.) | join(",")')" --private-key $1 --ssh-common-args='-o StrictHostKeyChecking=no' -m ping all
